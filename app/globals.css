@@ -2,41 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 200 20% 98%;
-    --btn-background: 200 10% 91%;
-    --btn-background-hover: 200 10% 89%;
-    --foreground: 200 50% 3%;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: 200 50% 3%;
-      --btn-background: 200 10% 9%;
-      --btn-background-hover: 200 10% 12%;
-      --foreground: 200 20% 96%;
-    }
-  }
+:root {
+	--foreground-rgb: 0, 0, 0;
+	--background-start-rgb: 214, 219, 220;
+	--background-end-rgb: 255, 255, 255;
 }
 
-@layer base {
-  * {
-    @apply border-foreground/20;
-  }
+@media (prefers-color-scheme: dark) {
+	:root {
+		--foreground-rgb: 255, 255, 255;
+		--background-start-rgb: 0, 0, 0;
+		--background-end-rgb: 0, 0, 0;
+	}
+}
+
+@layer components {
+	.main-container {
+		@apply flex min-h-screen flex-1 flex-col items-center bg-slate-800 pb-10 max-md:pb-32;
+	}
+
+	.right-sidebar {
+		@apply sticky right-0 top-0 z-20 flex h-screen w-fit flex-col justify-between gap-12 overflow-auto border-l border-l-slate-700 bg-slate-800 px-10 pb-6 pt-8 max-xl:hidden;
+	}
+}
+
+body {
+	color: rgb(var(--foreground-rgb));
+}
+
+.grid-center {
+	grid-area: 1 / 1 / 2 / 2;
+}
+
+.svg-fit svg {
+	height: 100%;
+	width: 100%;
+}
+
+.no-resize {
+	resize: none;
+}
+
+.progress {
+	width: 30px;
+	height: 30px;
+}
+
+.progress-background {
+	fill: none;
+	stroke: #ddd;
+	stroke-width: 2;
+}
+
+.progress-bar {
+	fill: none;
+	stroke-width: 2;
+	stroke-linecap: round;
+	transform-origin: center;
+	transform: rotate(-90deg);
 }
 
 .animate-in {
-  animation: animateIn 0.3s ease 0.15s both;
+	animation: animateIn 0.3s ease 0.15s both;
 }
 
 @keyframes animateIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
