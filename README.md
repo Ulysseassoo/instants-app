@@ -41,6 +41,8 @@
    npx supabase start
    ```
 
+7. Have a project on supabase if you want to deploy it
+
 ## Feedback and issues
 
 Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
