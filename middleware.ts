@@ -16,13 +16,15 @@ export async function middleware(request: NextRequest) {
 			data: { session }
 		} = await supabase.auth.getSession()
 
+		// REDIRECT TO LOGIN IF USER IS NOT LOGGED IN
 		if (!session && !excludedPaths.includes(pathname)) {
 			const url = new URL(request.url)
 			url.pathname = "/login"
 			return NextResponse.redirect(url)
 		}
 
-		if (session && !session.user.user_metadata.has_profile) {
+		// REDIRECT TO ONBOARDING IF USER DOESN'T HAVE PROFILE
+		if (session && !session.user.user_metadata.has_profile && pathname !== "/onboarding") {
 			const url = new URL(request.url)
 			url.pathname = "/onboarding"
 			return NextResponse.redirect(url)
