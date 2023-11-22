@@ -17,6 +17,9 @@ const ProfilePicture = ({ avatar_url, username, classname }: Props) => {
 					alt={`${username} profile picture`}
 					width={200}
 					height={200}
+					style={{
+						objectFit: "cover"
+					}}
 				/>
 			) : (
 				<div className={`rounded-full border-white border-2 flex items-center justify-center bg-slate-900 ${classname ? classname : " h-10 w-10"}`}>
