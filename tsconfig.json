@@ -25,7 +25,8 @@
 			"@/constants/*": ["./constants/*"],
 			"@/supabase/*": ["./supabase/*"],
 			"@/utils/*": ["./utils/*"],
-			"@/schemas/*": ["./schemas/*"]
+			"@/schemas/*": ["./schemas/*"],
+			"@/interfaces/*": ["./interfaces/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
