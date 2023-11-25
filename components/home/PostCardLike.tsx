@@ -5,17 +5,18 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
 import { toast } from "react-toastify"
 import { NotificationType } from "../notifications/NotificationCard"
 import { createClient } from "@/utils/supabase/client"
+import LikeInterface from "@/interfaces/Like"
 
 interface Props {
 	postId: number
-	likes: any[]
-	currentUserId: string
+	likes: LikeInterface[]
+	currentProfileId: string
 	postUserId: string
 }
 
-const PostCardLike = ({ postId, likes, currentUserId, postUserId }: Props) => {
+const PostCardLike = ({ postId, likes, currentProfileId, postUserId }: Props) => {
 	const supabase = createClient()
-	const isLiked = likes.find((like) => like.user_id === currentUserId)
+	const isLiked = likes.find((like) => like.profile_id === currentProfileId)
 	const [postIsLiked, setPostIsLiked] = useState(Boolean(isLiked))
 
 	const toggleLike = async () => {
@@ -28,14 +29,15 @@ const PostCardLike = ({ postId, likes, currentUserId, postUserId }: Props) => {
 				if (profile.data !== null) {
 					if (!postIsLiked) {
 						await supabase.from("likes").insert({
-							user_id: profile.data.id,
+							profile_id: profile.data.id,
 							post_id: postId
 						})
 						await supabase.from("notifications").insert({
 							type: NotificationType.Like,
-							user_id: currentUserId,
+							profile_id: currentProfileId,
 							owner_user_id: postUserId,
-							post_id: postId
+							post_id: postId,
+							is_read: false
 						})
 					} else {
 						if (isLiked !== undefined) {
@@ -44,7 +46,7 @@ const PostCardLike = ({ postId, likes, currentUserId, postUserId }: Props) => {
 								.from("notifications")
 								.delete()
 								.eq("post_id", postId)
-								.eq("user_id", currentUserId)
+								.eq("profile_id", currentProfileId)
 								.eq("type", NotificationType.Like)
 								.eq("owner_user_id", postUserId)
 						}

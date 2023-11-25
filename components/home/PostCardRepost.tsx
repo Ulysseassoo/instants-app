@@ -5,17 +5,18 @@ import { AiOutlineRetweet } from "react-icons/ai"
 import { toast } from "react-toastify"
 import { createClient } from "@/utils/supabase/client"
 import { NotificationType } from "../notifications/NotificationCard"
+import RepostInterface from "@/interfaces/Repost"
 
 interface Props {
 	postId: number
-	reposts: any[]
-	currentUserId: string
+	reposts: RepostInterface[]
+	currentProfileId: string
 	postUserId: string
 }
 
-const PostCardRepost = ({ reposts, currentUserId, postId, postUserId }: Props) => {
+const PostCardRepost = ({ reposts, currentProfileId, postId, postUserId }: Props) => {
 	const supabase = createClient()
-	const isReposted = reposts.find((repost) => repost.user_id === currentUserId)
+	const isReposted = reposts.find((repost) => repost.profile_id === currentProfileId)
 	const [postIsReposted, setPostIsReposted] = useState(Boolean(isReposted))
 
 	const toggleRepost = async () => {
@@ -28,7 +29,7 @@ const PostCardRepost = ({ reposts, currentUserId, postId, postUserId }: Props) =
 				if (profile.data !== null) {
 					if (!postIsReposted) {
 						const { error } = await supabase.from("reposts").insert({
-							user_id: profile.data.id,
+							profile_id: profile.data.id,
 							post_id: postId,
 							repost_date: new Date().toDateString()
 						})
@@ -37,9 +38,10 @@ const PostCardRepost = ({ reposts, currentUserId, postId, postUserId }: Props) =
 
 						await supabase.from("notifications").insert({
 							type: NotificationType.Repost,
-							user_id: currentUserId,
+							profile_id: currentProfileId,
 							owner_user_id: postUserId,
-							post_id: postId
+							post_id: postId,
+							is_read: false
 						})
 					} else {
 						if (isReposted !== undefined) {
@@ -48,7 +50,7 @@ const PostCardRepost = ({ reposts, currentUserId, postId, postUserId }: Props) =
 								.from("notifications")
 								.delete()
 								.eq("post_id", postId)
-								.eq("user_id", currentUserId)
+								.eq("profile_id", currentProfileId)
 								.eq("type", NotificationType.Repost)
 								.eq("owner_user_id", postUserId)
 						}

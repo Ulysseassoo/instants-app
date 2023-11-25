@@ -2,15 +2,18 @@
 
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
-import { AiOutlineComment, AiOutlineHeart, AiOutlineRetweet, AiOutlineShareAlt } from "react-icons/ai"
+import { AiOutlineComment } from "react-icons/ai"
 import ProfilePicture from "../shared/ProfilePicture"
 import PostCardLike from "./PostCardLike"
 import PostCardRepost from "./PostCardRepost"
 import moment from "moment"
 import { createClient } from "@/utils/supabase/client"
+import { CommentInterfaceWithProfiles } from "@/interfaces/Comment"
+import RepostInterface from "@/interfaces/Repost"
+import LikeInterface from "@/interfaces/Like"
 
 interface Props {
-	currentUserId: string
+	currentProfileId: string
 	isComment?: boolean
 }
 
@@ -19,11 +22,11 @@ const formatDate = (dateString: string | null) => {
 	return formattedDate
 }
 
-const PostCard = ({ currentUserId, content, user_id, profiles, id, isComment = false, comments, likes, reposts, created_at }: Props & any) => {
+const PostCard = ({ currentProfileId, content, profile_id, profiles, id, isComment = false, comments, likes, reposts, created_at }: Props & any) => {
 	const supabase = createClient()
-	const [postLikes, setPostLikes] = useState<any[]>(likes)
-	const [postComments, setPostComments] = useState<any[]>(comments)
-	const [postReposts, setPostReposts] = useState<any[]>(reposts)
+	const [postLikes, setPostLikes] = useState<LikeInterface[]>(likes)
+	const [postComments, setPostComments] = useState<CommentInterfaceWithProfiles[]>(comments)
+	const [postReposts, setPostReposts] = useState<RepostInterface[]>(reposts)
 
 	useEffect(() => {
 		const postChannel = supabase
@@ -77,7 +80,7 @@ const PostCard = ({ currentUserId, content, user_id, profiles, id, isComment = f
 			<div className="flex items-start justify-between">
 				<div className="flex w-full flex-1 flex-row gap-4">
 					<div className="flex flex-col items-center">
-						<Link href={`/profile/${user_id}`} className="relative h-11 w-11">
+						<Link href={`/profile/${profile_id}`} className="relative h-11 w-11">
 							<ProfilePicture username={profiles.full_name ?? profiles.username} avatar_url={profiles.avatar_url} />
 						</Link>
 
@@ -99,7 +102,7 @@ const PostCard = ({ currentUserId, content, user_id, profiles, id, isComment = f
 					</div>
 
 					<div className="flex w-full flex-col">
-						<Link href={`/profile/${user_id}`} className="w-fit">
+						<Link href={`/profile/${profile_id}`} className="w-fit">
 							<h4 className="cursor-pointer font-semibold text-white">{profiles.full_name ?? profiles.username}</h4>
 						</Link>
 
@@ -107,14 +110,11 @@ const PostCard = ({ currentUserId, content, user_id, profiles, id, isComment = f
 
 						<div className={`mt-5 flex flex-col gap-3 ${isComment && "mb-6"}`}>
 							<div className="flex gap-3.5 text-slate-300">
-								<PostCardLike likes={likes} postUserId={user_id} currentUserId={currentUserId} postId={id} />
+								<PostCardLike likes={postLikes} postUserId={profile_id} currentProfileId={currentProfileId} postId={id} />
 								<Link href={`/post/${id}`} className="h-5 w-5 items-center flex svg-fit cursor-pointer">
 									<AiOutlineComment />
 								</Link>
-								<PostCardRepost reposts={reposts} postUserId={user_id} currentUserId={currentUserId} postId={id} />
-								<div className="h-5 w-5 items-center flex svg-fit cursor-pointer">
-									<AiOutlineShareAlt />
-								</div>
+								<PostCardRepost reposts={postReposts} postUserId={profile_id} currentProfileId={currentProfileId} postId={id} />
 							</div>
 
 							<div className="flex items-center gap-2 select-none">

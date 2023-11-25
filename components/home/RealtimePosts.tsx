@@ -5,11 +5,11 @@ import PostCard from "./PostCard"
 import { createClient } from "@/utils/supabase/client"
 
 interface Props {
-	currentUserId: string
+	currentProfileId: string
 	serverPosts: any[] | null
 }
 
-const RealtimePosts = ({ serverPosts, currentUserId }: Props) => {
+const RealtimePosts = ({ serverPosts, currentProfileId }: Props) => {
 	const supabase = createClient()
 	const [posts, setPosts] = useState(serverPosts)
 
@@ -49,8 +49,8 @@ const RealtimePosts = ({ serverPosts, currentUserId }: Props) => {
 							content={post.content}
 							created_at={post.created_at}
 							id={post.id}
-							user_id={post.user_id}
-							currentUserId={currentUserId}
+							profile_id={post.profile_id}
+							currentProfileId={currentProfileId}
 							comments={post.comments}
 							communities={post.communities}
 							likes={post.likes}

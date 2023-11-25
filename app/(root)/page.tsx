@@ -30,10 +30,14 @@ export default async function Home() {
 		})
 		.is("parent_id", null)
 
+	if (!data) {
+		return <></>
+	}
+
 	return (
 		<div className="h-screen w-full">
 			<div className="mt-9 flex flex-col gap-10">
-				<RealtimePosts serverPosts={posts as any} currentUserId={data.id} />
+				<RealtimePosts serverPosts={posts as any} currentProfileId={data.id} />
 			</div>
 		</div>
 	)
