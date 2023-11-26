@@ -2,6 +2,9 @@ import React from "react"
 import { AiFillHeart, AiOutlineComment, AiOutlineRetweet } from "react-icons/ai"
 import ProfilePicture from "../shared/ProfilePicture"
 import Link from "next/link"
+import PostInterface from "@/interfaces/Post"
+import ProfileInterface from "@/interfaces/Profile"
+import CommentInterface from "@/interfaces/Comment"
 
 export enum NotificationType {
 	"Like" = "LIKE",
@@ -10,12 +13,12 @@ export enum NotificationType {
 }
 
 interface Props {
-	post: any
-	user: any
-	comment: any
+	post: PostInterface
+	profile: ProfileInterface
+	comment: CommentInterface
 }
 
-const NotificationCard = ({ type, user, post, comment, is_read }: Props & any) => {
+const NotificationCard = ({ type, profile, post, comment, is_read }: Props & any) => {
 	if (type === NotificationType.Comment) {
 		return (
 			<Link href={`post/${post.id}`} className="w-full bg-slate-900 shadow-sm h-fit px-3 py-2 rounded-md relative hover:bg-slate-900/50">
@@ -26,10 +29,10 @@ const NotificationCard = ({ type, user, post, comment, is_read }: Props & any) =
 						<AiOutlineComment className="text-primary" />
 					</div>
 					<div className="flex flex-col gap-2">
-						<ProfilePicture username={user.username} avatar_url={user.avatar_url} classname="h-8 w-8" />
+						<ProfilePicture username={profile.username} avatar_url={profile.avatar_url} classname="h-8 w-8" />
 						<div className="flex flex-col gap-0.5">
 							<p className="text-sm text-slate-200">
-								<span className="font-bold">{user.full_name}</span> commented your post.
+								<span className="font-bold">{profile.full_name}</span> commented your post.
 							</p>
 							<p className="text-sm text-slate-500">Answering to you:</p>
 						</div>
@@ -48,9 +51,9 @@ const NotificationCard = ({ type, user, post, comment, is_read }: Props & any) =
 					{type === NotificationType.Repost && <AiOutlineRetweet className="text-secondary" />}
 				</div>
 				<div className="flex flex-col gap-2">
-					<ProfilePicture username={user.username} avatar_url={user.avatar_url} classname="h-8 w-8" />
+					<ProfilePicture username={profile.username} avatar_url={profile.avatar_url} classname="h-8 w-8" />
 					<p className="text-sm text-slate-200">
-						<span className="font-bold">{user.full_name}</span> {type === NotificationType.Like ? "liked" : "reposted"} your post.
+						<span className="font-bold">{profile.full_name}</span> {type === NotificationType.Like ? "liked" : "reposted"} your post.
 					</p>
 					<p className="text-sm text-slate-500">{post.content}</p>
 				</div>
