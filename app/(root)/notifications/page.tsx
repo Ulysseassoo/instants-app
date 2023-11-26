@@ -30,7 +30,6 @@ const Page = async () => {
 		.order("created_at", {
 			ascending: false
 		})
-	console.log("🚀 ~ file: page.tsx:33 ~ Page ~ notifications:", notifications)
 
 	return (
 		<section>
