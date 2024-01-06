@@ -32,7 +32,7 @@ const ProfileHeader = ({ currentUserId, profile }: Props) => {
 
 	useEffect(() => {
 		const channel = supabase
-			.channel("*")
+			.channel(`profile-${profile.id}}`)
 			.on<Database["public"]["Tables"]["profiles"]["Row"]>(
 				"postgres_changes",
 				{ event: "UPDATE", schema: "public", table: "profiles", filter: `id=eq.${profile.id}` },

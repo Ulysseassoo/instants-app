@@ -41,7 +41,7 @@ const EditProfile = ({ currentUserId, profile }: Props) => {
 			)}
 
 			{showModal ? (
-				<Modal getBack={() => {}} modalClass="overflow-auto h-3/4 py-0 !important" isAnotherButton>
+				<Modal getBack={() => {}} modalClass="overflow-auto !h-3/4 !py-0" isAnotherButton>
 					<div className="px-4 h-16 w-full bg-slate-900/80 backdrop-blur-md items-center justify-between flex sticky top-0 left-0 z-20">
 						<h2 className="text-md max-sm:text-sm mb-6 pt-2">Edit Profile</h2>
 						<button type="button" onClick={getBack} className="h-10 w-10 absolute top-3 right-4 cursor-pointer ">

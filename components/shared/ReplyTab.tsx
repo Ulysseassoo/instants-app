@@ -10,6 +10,8 @@ interface Props {
 }
 
 const ReplyTab = async ({ currentUserId, profileUserId }: Props) => {
+	console.log("🚀 ~ file: ReplyTab.tsx:13 ~ ReplyTab ~ profileUserId:", profileUserId)
+	console.log("🚀 ~ file: ReplyTab.tsx:13 ~ ReplyTab ~ currentUserId:", currentUserId)
 	const cookiesStore = cookies()
 	const supabase = createClient(cookiesStore)
 
@@ -18,7 +20,7 @@ const ReplyTab = async ({ currentUserId, profileUserId }: Props) => {
 		.select(
 			"post:posts(*, likes!left(*), reposts!left(*), profiles!left(*), communities!left(*), comments:posts!parent_id(*, profiles!left(*), likes!left(*), reposts!left(*), communities!left(*), comments:posts!parent_id(*)))"
 		)
-		.eq("user_id", profileUserId)
+		.eq("profile_id", profileUserId)
 		.order("created_at", {
 			ascending: false
 		})
@@ -38,7 +40,7 @@ const ReplyTab = async ({ currentUserId, profileUserId }: Props) => {
 						created_at={post.created_at}
 						id={post.id}
 						profile_id={post.profile_id}
-						currentUserId={currentUserId}
+						currentProfileId={currentUserId}
 						comments={post.comments as any}
 						communities={post.communities}
 						likes={post.likes}
