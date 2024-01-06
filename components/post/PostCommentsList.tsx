@@ -42,23 +42,24 @@ const PostCommentsList = ({ comments, currentUserId, postId }: Props) => {
 
 	return (
 		<>
-			{postComments.map((comment) => (
-				<div className="mt-2" key={comment.id}>
-					<PostCard
-						content={comment.content}
-						created_at={comment.created_at}
-						id={comment.id}
-						profile_id={comment.profile_id}
-						currentUserId={currentUserId}
-						comments={comment.comments as any}
-						communities={comment.communities}
-						likes={comment.likes}
-						reposts={comment.reposts}
-						profiles={comment.profiles as any}
-						isComment
-					/>
-				</div>
-			))}
+			{postComments !== undefined &&
+				postComments.map((comment) => (
+					<div className="mt-2" key={comment.id}>
+						<PostCard
+							content={comment.content}
+							created_at={comment.created_at}
+							id={comment.id}
+							profile_id={comment.profile_id}
+							currentUserId={currentUserId}
+							comments={comment.comments as any}
+							communities={comment.communities}
+							likes={comment.likes}
+							reposts={comment.reposts}
+							profiles={comment.profiles as any}
+							isComment
+						/>
+					</div>
+				))}
 		</>
 	)
 }

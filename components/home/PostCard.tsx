@@ -11,6 +11,7 @@ import { createClient } from "@/utils/supabase/client"
 import { CommentInterfaceWithProfiles } from "@/interfaces/Comment"
 import RepostInterface from "@/interfaces/Repost"
 import LikeInterface from "@/interfaces/Like"
+import PostInterface, { PostInterfaceWithRelations } from "@/interfaces/Post"
 
 interface Props {
 	currentProfileId: string
@@ -22,7 +23,18 @@ const formatDate = (dateString: string | null) => {
 	return formattedDate
 }
 
-const PostCard = ({ currentProfileId, content, profile_id, profiles, id, isComment = false, comments, likes, reposts, created_at }: Props & any) => {
+const PostCard = ({
+	currentProfileId,
+	content,
+	profile_id,
+	profiles,
+	id,
+	isComment = false,
+	comments,
+	likes,
+	reposts,
+	created_at
+}: Props & Omit<PostInterfaceWithRelations, "community_id" | "parent_id">) => {
 	const supabase = createClient()
 	const [postLikes, setPostLikes] = useState<LikeInterface[]>(likes)
 	const [postComments, setPostComments] = useState<CommentInterfaceWithProfiles[]>(comments)

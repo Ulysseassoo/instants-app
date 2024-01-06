@@ -11,7 +11,7 @@ interface Props {
 	postId: number
 	reposts: RepostInterface[]
 	currentProfileId: string
-	postUserId: string
+	postUserId: string | null
 }
 
 const PostCardRepost = ({ reposts, currentProfileId, postId, postUserId }: Props) => {
@@ -39,7 +39,7 @@ const PostCardRepost = ({ reposts, currentProfileId, postId, postUserId }: Props
 						await supabase.from("notifications").insert({
 							type: NotificationType.Repost,
 							profile_id: currentProfileId,
-							owner_user_id: postUserId,
+							owner_user_id: postUserId ?? "",
 							post_id: postId,
 							is_read: false
 						})
@@ -52,7 +52,7 @@ const PostCardRepost = ({ reposts, currentProfileId, postId, postUserId }: Props
 								.eq("post_id", postId)
 								.eq("profile_id", currentProfileId)
 								.eq("type", NotificationType.Repost)
-								.eq("owner_user_id", postUserId)
+								.eq("owner_user_id", postUserId ?? "")
 						}
 					}
 				}

@@ -46,7 +46,7 @@ const PostForm = () => {
 				if (profile.data !== null) {
 					await supabase.from("posts").insert({
 						content: data.content,
-						user_id: profile.data.id
+						profile_id: profile.data.id
 					})
 					reset()
 					document.documentElement.style.overflow = "scroll"
@@ -98,11 +98,11 @@ const PostForm = () => {
 					</div>
 					<hr className="bg-slate-800 w-px h-8" />
 					<button
-						className="cursor-pointer text-sm p-0 w-fit flex items-center justify-center text-white rounded-md overflow-hidden bg-gradient-to-r from-primary via-secondary to-tertiary disabled:opacity-30 disabled:cursor-default"
+						className="cursor-pointer text-sm p-0 w-24 flex items-center justify-center text-white rounded-md overflow-hidden bg-gradient-to-r from-primary via-secondary to-tertiary disabled:opacity-30 disabled:cursor-default"
 						type="submit"
 						disabled={!isValid || isSubmitting}>
-						{isSubmitting && (
-							<div className="grid grid-rows-1 grid-cols-1 place-items-center">
+						{isSubmitting ? (
+							<div className="grid grid-rows-1 p-2 grid-cols-1 place-items-center">
 								<svg width="25px" height="25px" className="animate-spin grid-center" viewBox="0 0 24 24">
 									<g>
 										<path fill="none" d="M0 0h24v24H0z" />
@@ -110,8 +110,9 @@ const PostForm = () => {
 									</g>
 								</svg>
 							</div>
+						) : (
+							<span className="block p-2 text-white">Post it</span>
 						)}
-						<span className="block p-2 text-white">Post it</span>
 					</button>
 				</div>
 			</div>

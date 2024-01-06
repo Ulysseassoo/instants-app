@@ -39,7 +39,7 @@ const Post = async ({ params }: Params) => {
 	const { data: post } = await supabase
 		.from("posts")
 		.select(
-			"*, likes!left(*), reposts!left(*), profiles!left(*), communities!left(*), comments:posts!parent_id(*, profiles!left(*), likes!left(*), reposts!left(*), communities!left(*), comments:posts!parent_id(*))"
+			"*, likes!left(*), reposts!left(*), profiles!left(*), communities!left(*), comments:posts!parent_id(*, profiles!left(*), likes!left(*), reposts!left(*), communities!left(*), comments:posts!parent_id(*, profiles!left(*)))"
 		)
 		.eq("id", params.id)
 		.single()

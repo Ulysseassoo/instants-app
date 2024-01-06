@@ -11,7 +11,7 @@ interface Props {
 	postId: number
 	likes: LikeInterface[]
 	currentProfileId: string
-	postUserId: string
+	postUserId: string | null
 }
 
 const PostCardLike = ({ postId, likes, currentProfileId, postUserId }: Props) => {
@@ -35,7 +35,7 @@ const PostCardLike = ({ postId, likes, currentProfileId, postUserId }: Props) =>
 						await supabase.from("notifications").insert({
 							type: NotificationType.Like,
 							profile_id: currentProfileId,
-							owner_user_id: postUserId,
+							owner_user_id: postUserId ?? "",
 							post_id: postId,
 							is_read: false
 						})
@@ -48,7 +48,7 @@ const PostCardLike = ({ postId, likes, currentProfileId, postUserId }: Props) =>
 								.eq("post_id", postId)
 								.eq("profile_id", currentProfileId)
 								.eq("type", NotificationType.Like)
-								.eq("owner_user_id", postUserId)
+								.eq("owner_user_id", postUserId ?? "")
 						}
 					}
 				}
