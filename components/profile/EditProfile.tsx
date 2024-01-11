@@ -4,9 +4,9 @@ import React, { useState } from "react"
 import Modal from "../shared/Modal"
 import AccountProfile from "../onboarding/AccountProfile"
 import { MdClose } from "react-icons/md"
+import useAuthStore from "@/store/authStore"
 
 interface Props {
-	currentUserId: string
 	profile: {
 		avatar_url: string | null
 		biography: string | null
@@ -18,8 +18,9 @@ interface Props {
 	}
 }
 
-const EditProfile = ({ currentUserId, profile }: Props) => {
+const EditProfile = ({ profile }: Props) => {
 	const [showModal, setShowModal] = useState(false)
+	const { profile: currentProfile } = useAuthStore((state) => state)
 
 	const getBack = () => {
 		setShowModal(false)
@@ -28,7 +29,7 @@ const EditProfile = ({ currentUserId, profile }: Props) => {
 
 	return (
 		<>
-			{currentUserId === profile.user_id && (
+			{currentProfile !== null && currentProfile.user_id === profile.user_id && (
 				<button
 					className={`cursor-pointer text-sm p-0 w-fit flex items-center justify-center text-white rounded-md overflow-hidden bg-slate-900 border-2 border-slate-700 shadow-sm`}
 					type="button"

@@ -23,10 +23,12 @@ const Profile = async ({ params }: { params: { id: string } }) => {
 	}
 
 	const { data } = await supabase.from("profiles").select("*").eq("id", params.id).single()
+	const { data: followers } = await supabase.from("followers").select("*").eq("profile_id", params.id)
+	const { data: following } = await supabase.from("followers").select("*").eq("follower_id", params.id)
 	const { count } = await supabase.from("posts").select("*", { count: "exact", head: true }).eq("profile_id", params.id)
 	const { count: repliesCount } = await supabase.from("reposts").select("*", { count: "exact", head: true }).eq("profile_id", params.id)
 
-	if (!data) {
+	if (!data || !followers || !following) {
 		redirect("/login")
 	}
 
@@ -36,7 +38,7 @@ const Profile = async ({ params }: { params: { id: string } }) => {
 
 	return (
 		<section className="mt-6">
-			<ProfileHeader currentUserId={session.user.id} profile={data} />
+			<ProfileHeader profile={data} followersList={followers} followingList={following} />
 
 			<div className="mt-9">
 				<Tabs defaultValue="posts" className="w-full">

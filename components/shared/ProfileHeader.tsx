@@ -8,10 +8,12 @@ import { LuMessageSquare } from "react-icons/lu"
 import { Database } from "@/supabase/database"
 import { createClient } from "@/utils/supabase/client"
 import EditProfile from "../profile/EditProfile"
+import useAuthStore from "@/store/authStore"
 
 interface Props {
-	currentUserId: string
 	profile: Database["public"]["Tables"]["profiles"]["Row"]
+	followersList: Database["public"]["Tables"]["followers"]["Row"][]
+	followingList: Database["public"]["Tables"]["followers"]["Row"][]
 }
 
 const formatDate = (date: string | null) => {
@@ -26,9 +28,14 @@ const formatDate = (date: string | null) => {
 	return ""
 }
 
-const ProfileHeader = ({ currentUserId, profile }: Props) => {
+const ProfileHeader = ({ profile, followersList, followingList }: Props) => {
 	const supabase = createClient()
 	const [updatedProfile, setUpdatedProfile] = useState(profile)
+	const { profile: currentProfile } = useAuthStore((state) => state)
+	const [followers, setFollowers] = useState<Database["public"]["Tables"]["followers"]["Row"][]>(followersList)
+	const followersCount = followersList.length
+	const followingCount = followingList.length
+	const checkIfFollowing = followersList.some((f) => f.follower_id === currentProfile?.id)
 
 	useEffect(() => {
 		const channel = supabase
@@ -42,10 +49,50 @@ const ProfileHeader = ({ currentUserId, profile }: Props) => {
 			)
 			.subscribe()
 
+		const channelFollowers = supabase
+			.channel(`profile-followers-${profile.id}}`)
+			.on<Database["public"]["Tables"]["followers"]["Row"]>(
+				"postgres_changes",
+				{ event: "INSERT", schema: "public", table: "followers", filter: `profile_id=eq.${profile.id}` },
+				async (payload) => {
+					setFollowers((list) => [...list, payload.new])
+				}
+			)
+			.on<Database["public"]["Tables"]["followers"]["Row"]>(
+				"postgres_changes",
+				{ event: "DELETE", schema: "public", table: "followers", filter: `profile_id=eq.${profile.id}` },
+				async (payload) => {
+					setFollowers((list) => list.filter((f) => f.follower_id !== payload.old.follower_id))
+				}
+			)
+			.subscribe()
+
 		return () => {
 			supabase.removeChannel(channel)
+			supabase.removeChannel(channelFollowers)
 		}
 	}, [profile.id])
+
+	const updateFollower = async () => {
+		if (currentProfile !== null) {
+			if (checkIfFollowing) {
+				const { error } = await supabase.from("followers").delete().match({ profile_id: profile.id, follower_id: currentProfile.id })
+
+				if (error) {
+					console.log(error)
+				}
+			} else {
+				const { error } = await supabase.from("followers").upsert({
+					profile_id: profile.id,
+					follower_id: currentProfile.id
+				})
+
+				if (error) {
+					console.log(error)
+				}
+			}
+		}
+	}
 
 	return (
 		<div className="flex w-full flex-col justify-start">
@@ -65,7 +112,7 @@ const ProfileHeader = ({ currentUserId, profile }: Props) => {
 					</div>
 				</div>
 
-				{currentUserId !== profile.user_id ? (
+				{currentProfile !== null && currentProfile.id !== profile.id ? (
 					<div className="flex items-center gap-1">
 						<button
 							className={`cursor-pointer text-xl p-2 w-fit flex items-center justify-center text-white rounded-md overflow-hidden bg-slate-900 border-2 border-slate-700 shadow-sm`}
@@ -75,12 +122,13 @@ const ProfileHeader = ({ currentUserId, profile }: Props) => {
 
 						<button
 							className={`cursor-pointer text-sm px-3 py-2 w-fit flex items-center justify-center text-slate-800 rounded-md overflow-hidden bg-white border-2 border-slate-700 shadow-sm hover:bg-gray-300`}
-							type="button">
-							Follow
+							type="button"
+							onClick={updateFollower}>
+							{checkIfFollowing ? "Unfollow" : "Follow"}
 						</button>
 					</div>
 				) : null}
-				<EditProfile currentUserId={currentUserId} profile={updatedProfile} />
+				<EditProfile profile={updatedProfile} />
 			</div>
 
 			<p className="mt-6 max-w-lg text-md text-slate-300">{updatedProfile.biography}</p>
@@ -90,10 +138,10 @@ const ProfileHeader = ({ currentUserId, profile }: Props) => {
 
 			<div className="mt-4 max-w-lg text-sm text-slate-300 flex items-center gap-1">
 				<p>
-					<span className="text-white font-bold">0</span> followers
+					<span className="text-white font-bold">{followersCount}</span> followers
 				</p>
 				<p>
-					<span className="text-white font-bold">0</span> following
+					<span className="text-white font-bold">{followingCount}</span> following
 				</p>
 			</div>
 

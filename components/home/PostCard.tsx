@@ -100,16 +100,15 @@ const PostCard = ({
 
 						<div className="mt-1 flex items-center relative select-none">
 							{postComments.length > 0 &&
-								postComments
-									.slice(0, 2)
-									.map((comment, index) => (
+								postComments.slice(0, 2).map((comment, index) => (
+									<div className="h-5 w-5" key={comment.id}>
 										<ProfilePicture
 											classname={`h-5 w-5 z-${(index + 1) * 10} relative right-${index * 2} text-2xs`}
 											username={comment.profiles.username}
 											avatar_url={comment.profiles.avatar_url}
-											key={comment.id}
 										/>
-									))}
+									</div>
+								))}
 						</div>
 					</div>
 

@@ -10,8 +10,6 @@ interface Props {
 }
 
 const ReplyTab = async ({ currentUserId, profileUserId }: Props) => {
-	console.log("🚀 ~ file: ReplyTab.tsx:13 ~ ReplyTab ~ profileUserId:", profileUserId)
-	console.log("🚀 ~ file: ReplyTab.tsx:13 ~ ReplyTab ~ currentUserId:", currentUserId)
 	const cookiesStore = cookies()
 	const supabase = createClient(cookiesStore)
 

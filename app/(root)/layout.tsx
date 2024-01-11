@@ -7,6 +7,7 @@ import ButtonSidebar from "@/components/shared/ButtonSidebar"
 import TopBar from "@/components/shared/TopBar"
 import RightBar from "@/components/shared/RightBar"
 import BottomBar from "@/components/shared/BottomBar"
+import Authentification from "@/components/Authentification"
 
 const defaultUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children, modal }: { children: React.ReactN
 		<html lang="en">
 			<body suppressHydrationWarning={true} className={GeistSans.className}>
 				<ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} newestOnTop={false} closeOnClick />
+				<Authentification />
 				<main className="flex flex-row ">
 					<Sidebar>
 						<SidebarItem text="Home" href="/" />

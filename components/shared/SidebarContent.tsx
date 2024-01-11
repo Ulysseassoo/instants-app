@@ -8,6 +8,7 @@ import { TbLogout } from "react-icons/tb"
 import { useRouter } from "next/navigation"
 import ProfilePicture from "./ProfilePicture"
 import { createClient } from "@/utils/supabase/client"
+import useAuthStore from "@/store/authStore"
 
 interface Props {
 	children: React.ReactNode
@@ -26,10 +27,12 @@ const SidebarContent = ({ children, profile, email, notificationsCount }: Props)
 	const [updatedNotificationsCount, setUpdatedNotificationsCount] = useState(notificationsCount)
 	const [isExpand, setIsExpanded] = useState(true)
 	const [isMenuActivated, setIsMenuActivated] = useState(false)
+	const { setLoggedOut } = useAuthStore((state) => state)
 	const router = useRouter()
 
 	const logout = async () => {
 		await supabase.auth.signOut()
+		setLoggedOut()
 		router.refresh()
 		router.push("/login")
 	}
@@ -67,7 +70,9 @@ const SidebarContent = ({ children, profile, email, notificationsCount }: Props)
 				</SidebarContext.Provider>
 
 				<div className="border-t flex p-3 relative border-slate-700">
-					<ProfilePicture avatar_url={profile.avatar_url} username={profile.username} />
+					<div className="h-10 w-10">
+						<ProfilePicture avatar_url={profile.avatar_url} username={profile.username} />
+					</div>
 
 					<div className={`flex justify-between items-center overflow-hidden transition-all ${isExpand ? "w-52 ml-3" : "w-0"}`}>
 						<div className="leading-4">

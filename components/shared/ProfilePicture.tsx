@@ -18,7 +18,9 @@ const ProfilePicture = ({ avatar_url, username, classname }: Props) => {
 					width={200}
 					height={200}
 					style={{
-						objectFit: "cover"
+						objectFit: "cover",
+						height: "100%",
+						width: "100%"
 					}}
 				/>
 			) : (
